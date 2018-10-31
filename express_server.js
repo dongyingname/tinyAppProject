@@ -11,6 +11,8 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+
+
 // Generate 6 digit string
 function generateRandomString() {
     var str = '';
