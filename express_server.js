@@ -16,6 +16,15 @@ app.get("/urls", (req, res) => {
     let templateVars = { urls: urlDatabase };
     res.render("urls_index", templateVars);
   });
+ 
+  
+//Second route
+app.get("/urls/:id", (req, res) => {
+    let longURL = urlDatabase[req.params.id];
+    console.log(longURL);
+    let templateVars = { shortURL:req.params.id, longURL };
+    res.render("urls_show", templateVars);
+  });  
 //main page
 app.get("/", (req, res) => {
     res.send("Hello!");
