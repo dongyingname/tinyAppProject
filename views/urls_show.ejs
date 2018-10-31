@@ -17,8 +17,14 @@
             <%= shortURL %> ----
             <%= longURL %>
         </li>
-
+        <form method="POST" action="<%= `/urls/${shortURL}` %>"
+            <label>Type in a new long URL</label>
+            <input type="Text" value="<%= `${longURL}` %>">
+            <input type="submit" value="Update!">
+        </form>
+        
     </ul>
+    
 
 </body>
 
