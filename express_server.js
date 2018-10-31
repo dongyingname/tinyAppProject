@@ -1,11 +1,16 @@
-//get all the tools
+//get all the tools:express cookie-parser
 var express = require("express");
 var app = express();
+var cookieParser = require('cookie-parser');
 var PORT = 8080; // default port 8080
 
+//set cookie 'name' to value
+//
 
-//start up the ejs templating engine
+//start up the ejs templating engine and cookie parser
+app.use(cookieParser());
 app.set("view engine", "ejs");
+
 //start engine bodyParser
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({
@@ -13,7 +18,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 
-// Generate 6 digit string
+// A function that generate a digit string
 function generateRandomString() {
     var str = '';
     var alphs = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -28,6 +33,12 @@ var urlDatabase = {
     "9sm5xK": "http://www.google.com",
     "8sc9m1": "http://www.youtube.com"
 };
+
+//Route to POST where we submit the login form
+app.post("/login", (req, res) => {
+    res.cookie(userName, 'value'); 
+});
+
 
 //Route to print out urls in /urls 
 app.get("/urls", (req, res) => {
@@ -48,7 +59,9 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 app.post("/urls/:shortURL", (req, res) => {
     const id = req.params.shortURL;
     console.log(id);
-    const { long } = req.body;
+    const {
+        long
+    } = req.body;
     //Here, I could use my middleware and access req.sauceIndex
     urlDatabase[id] = long;
     res.redirect("/urls");
