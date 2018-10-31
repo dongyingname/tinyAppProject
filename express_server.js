@@ -20,8 +20,6 @@ function generateRandomString() {
     }
     return result;
 };
-
-
 //Our Database
 var urlDatabase = {
     "b2xVn2": "http://www.lighthouselabs.ca",
