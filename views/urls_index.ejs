@@ -10,13 +10,17 @@
 </head>
 
 <body>
-    <!-- Add your EJS code here -->
+    
 
     <ul>
         <% for (let i in urls) { %>
         <li>
             <%= urls[i]; %>
         </li>
+        <form method="POST" action="/urls/9sm5xK/delete">
+            <label>Click to Delete</label>
+            <input type="submit" value="Delete">
+        </form>
         <% } %>
     </ul>
 

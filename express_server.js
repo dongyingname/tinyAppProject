@@ -34,7 +34,14 @@ app.get("/urls", (req, res) => {
     let templateVars = {
         urls: urlDatabase
     };
+
     res.render("urls_index", templateVars);
+});
+
+//Post Route. Handles the delete button that was added to the main(index) page
+app.post("/urls/9sm5xK/delete", (req, res) => {
+
+    res.send("Ok"); // Respond with 'Ok' (we will replace this)
 });
 
 //Route for post
@@ -49,10 +56,10 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 //Route for test  
-app.post("/urls", (req, res) => {
-    console.log(req.body); // debug statement to see POST parameters
-    res.send("Ok"); // Respond with 'Ok' (we will replace this)
-});
+// app.post("/urls", (req, res) => {
+//     console.log(req.body); // debug statement to see POST parameters
+//     res.send("Ok"); // Respond with 'Ok' (we will replace this)
+// });
 
 //Second route
 app.get("/urls/:id", (req, res) => {
