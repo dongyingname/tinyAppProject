@@ -39,9 +39,10 @@ app.get("/urls", (req, res) => {
 });
 
 //Post Route. Handles the delete button that was added to the main(index) page
-app.post("/urls/9sm5xK/delete", (req, res) => {
-
-    res.send("Ok"); // Respond with 'Ok' (we will replace this)
+app.post("/urls/delete", (req, res) => {
+    let str = "b2xVn2";
+    delete urlDatabase[str];
+    res.redirect("/urls");
 });
 
 //Route for post

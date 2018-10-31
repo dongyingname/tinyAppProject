@@ -17,11 +17,10 @@
         <li>
             <%= urls[i]; %>
         </li>
-            <%= let act = "/urls" + i + "/delete"; %>
-
-        <form method="POST" action=<%= act %>>
+            <%= let act = "/urls/" + i + "/delete" %>
+        <form method="POST" action=<%= act %>
             <label>Click to Delete</label>
-            <input type="submit" value="Delete">
+            <input type="Submit" value="Delete">
         </form>
         <% } %>
     </ul>
