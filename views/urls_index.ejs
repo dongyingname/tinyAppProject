@@ -3,17 +3,22 @@
 
 <head>
     <title>TinyApp</title>
-    <% include partials/_head.ejs %>
+
+<body>
+    <% include partials/_header %>
+</body>
 </head>
 
 <body>
     <!-- Add your EJS code here -->
-    
+
     <ul>
-            <% for (let i in urls) { %>
-                <li><%= urls[i]; %></li>
-            <% } %>
-        </ul>
+        <% for (let i in urls) { %>
+        <li>
+            <%= urls[i]; %>
+        </li>
+        <% } %>
+    </ul>
 
 </body>
 
