@@ -15,9 +15,8 @@
         <li>
             <%= i %> --- <%= urls[i]; %>
         </li>
-        
+        <a href="<%= `/urls/${i}` %>">Edit</a>
         <form method="POST" action="<%= `/urls/${i}` %>/delete">
-            <label>Click to Delete</label>
             <input type="Submit" value="Delete">
         </form>
         <% } %>

@@ -44,6 +44,15 @@ app.post("/urls/:shortURL/delete", (req, res) => {
     delete urlDatabase[str];
     res.redirect("/urls");
 });
+//Post Route. Updates the longURL and shortURL
+app.post("/urls/:shortURL", (req, res) => {
+    const id = req.params.shortURL;
+    console.log(id);
+    const { long } = req.body;
+    //Here, I could use my middleware and access req.sauceIndex
+    urlDatabase[id] = long;
+    res.redirect("/urls");
+});
 
 //Route for post
 app.get("/urls/new", (req, res) => {
@@ -65,7 +74,6 @@ app.get("/u/:shortURL", (req, res) => {
 //Second route
 app.get("/urls/:id", (req, res) => {
     let longURL = urlDatabase[req.params.id];
-    console.log(longURL);
     let templateVars = {
         shortURL: req.params.id,
         longURL
