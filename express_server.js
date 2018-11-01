@@ -42,7 +42,7 @@ function ifMatch(email, password) {
     //1:Correct combination
     //2:Correct email, wrong password
     //3:email dosn't exist
-    let ifEx = [];    
+    let ifEx = [];
     for (let i in users) {
         if (users[i]['email'] == email && password == users[i].password) {
             ifEx[0] = 1;
@@ -50,11 +50,11 @@ function ifMatch(email, password) {
             //console.log(ifEx[1]);
         } else if (users[i]['email'] == email && password != users[i].password) {
             ifEx[0] = 2;
-           // console.log(users[i]['password'])
+            // console.log(users[i]['password'])
         } else {
             ifEx[0] = 3;
         }
-        
+
     }
     return ifEx;
 }
@@ -111,7 +111,13 @@ app.get("/urls/new", (req, res) => {
         users: users,
         user_id: req.cookies["user_id"]
     };
-    res.render("urls_new", templateVars);
+    let ifId = req.cookies["user_id"];
+
+    if (ifId) {
+        res.render("urls_new", templateVars);
+    } else {
+        res.redirect("/login");
+    }
 });
 
 //Route to redirect
@@ -138,13 +144,13 @@ app.post("/login", (req, res) => {
         userName,
         password
     } = req.body;
-    if (ifMatch(userName, password)[0] == 1){
+    if (ifMatch(userName, password)[0] == 1) {
         let user_id = ifMatch(userName, password)[1];
         res.cookie('user_id', user_id);
         res.redirect("/urls");
-    } else if (ifMatch(userName, password)[0] == 2){
+    } else if (ifMatch(userName, password)[0] == 2) {
         res.status(400).send("Status Code 400!! Wrong Password!!");
-    } else if (ifMatch(userName, password)[0] == 3){
+    } else if (ifMatch(userName, password)[0] == 3) {
         res.status(400).send("Status Code 400!! Please Register First!!");
     }
 });
