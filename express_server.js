@@ -36,6 +36,28 @@ function ifEmail(email) {
     return ifEx;
 }
 
+//A function to determine whether the username and password combination
+// exists in the users object
+function ifMatch(email, password) {
+    //1:Correct combination
+    //2:Correct email, wrong password
+    //3:email dosn't exist
+    let ifEx = 0;    
+    for (let i in users) {
+        console.log(i);
+        if (users[i]['email'] == email && password == users[i].password) {
+            ifEx = 1;
+        } else if (users[i]['email'] == email && password != users[i].password) {
+            ifEx = 2;
+           // console.log(users[i]['password'])
+        } else {
+            ifEx = 3;
+        }
+        
+    }
+    return ifEx;
+}
+
 //Our Database
 var urlDatabase = {
     "b2xVn2": "http://www.lighthouselabs.ca",
@@ -56,8 +78,6 @@ const users = {
     }
 }
 
-
-
 //Route to print out urls in /urls 
 app.get("/urls", (req, res) => {
     let templateVars = {
@@ -66,6 +86,16 @@ app.get("/urls", (req, res) => {
     };
 
     res.render("urls_index", templateVars);
+});
+
+//Route to Login page
+app.get("/login", (req, res) => {
+    let templateVars = {
+        users: users,
+        userName: req.cookies["userName"],
+    };
+
+    res.render("url_login", templateVars);
 });
 
 //Register GET route. Sends the user to register page if the user doesn't log in yet
@@ -104,15 +134,17 @@ app.get("/urls/:id", (req, res) => {
 //Route to POST where we submit the login form
 app.post("/login", (req, res) => {
     const {
-        userName
+        userName,
+        password
     } = req.body;
-
-    if (ifEmail(userName)) {
-
+    console.log(ifMatch(userName, password));
+    if (ifMatch(userName, password) == 1){
         res.cookie('userName', userName);
         res.redirect("/urls");
-    } else {
-        res.status(400).send("Status Code 400!! You need to register first!!");
+    } else if (ifMatch(userName, password) == 2){
+        res.status(400).send("Status Code 400!! Wrong Password!!");
+    } else if (ifMatch(userName, password) == 3){
+        res.status(400).send("Status Code 400!! Please Register First!!");
     }
 });
 

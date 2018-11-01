@@ -23,13 +23,13 @@
             </form>
         </li>
         <% } else { %>
-        <form method="POST" action="/login" <label>Please Type In Your Email</label>
-            <li class="good"> <input type="text" name="userName" value="username"></li>
-            <li class="good"> <input type="submit" value="Log In!"> </li>
+        <form method="GET" action="/login">
+            <li> <input type="submit" value="LOG IN"> </li>
         </form>
         <form method="GET" action="/register">
-            <li> <input type="submit" value="Register!"> </li>
+           <li> <input type="submit" value="Register!"> </li> 
         </form>
+
         <% } %>
     </ul>
 </body>
