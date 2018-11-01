@@ -24,6 +24,18 @@ function generateRandomString() {
     }
     return str;
 };
+
+//A function that finds whether a new email already exists
+function ifEmail(email) {
+    let ifEx = false;
+    for (let i in users) {
+        if (email == users[i]['email']) {
+            ifEx = true;
+        }
+    }
+    return ifEx;
+}
+
 //Our Database
 var urlDatabase = {
     "b2xVn2": "http://www.lighthouselabs.ca",
@@ -43,6 +55,7 @@ const users = {
         password: "dishwasher-funk"
     }
 }
+
 //Route to POST where we submit the login form
 app.post("/login", (req, res) => {
     // let templateVars = {
@@ -59,15 +72,29 @@ app.post("/login", (req, res) => {
 app.post("/register", (req, res) => {
 
     let newId = generateRandomString();
-    const { email, password } = req.body;
-    let newUser = {
+    const {
+        email,
+        password
+    } = req.body;
+    console.log(ifEmail(email));
+    
+    if (email && password && !ifEmail(email)) {
+        let newUser = {
             id: newId,
             email: email,
             password: password
         };
-    users[newId] = newUser;
-    console.log(users);
-    res.redirect("/urls");
+        users[newId] = newUser;
+        //console.log(users);
+        res.cookie('user_id', newId);
+        res.redirect("/urls");
+    }
+    else if (ifEmail(email)){
+        res.status(400).send('The email already exists!!');
+    }
+    else {
+        res.status(400).send('Please Enter Something!!');
+    }
 });
 
 
