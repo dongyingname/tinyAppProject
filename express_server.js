@@ -59,7 +59,7 @@ function ifMatch(email, password) {
     return ifEx;
 }
 
-//Our Database
+//Our DatabaseurlDatabase
 var urlDatabase = {
     "b2xVn2": "http://www.lighthouselabs.ca",
     "9sm5xK": "http://www.google.com",
@@ -116,13 +116,13 @@ app.get("/urls/new", (req, res) => {
 
 //Route to redirect
 app.get("/u/:shortURL", (req, res) => {
-    let longURL = urlDatabase[req.params.shortURL];
+    let longURL = users[req.params.shortURL]['email'];
     res.redirect(longURL);
 });
 
 //Route to edit the longURL
 app.get("/urls/:id", (req, res) => {
-    let longURL = urlDatabase[req.params.id];
+    let longURL = users[req.params.id]['email'];
     let templateVars = {
         shortURL: req.params.id,
         longURL,
@@ -184,7 +184,7 @@ app.post("/logout", (req, res) => {
 //Post Route. Handles the delete button that was added to the main(index) page
 app.post("/urls/:shortURL/delete", (req, res) => {
     let str = req.params.shortURL;
-    delete urlDatabase[str];
+    delete users[str];
     res.redirect("/urls");
 });
 
@@ -195,7 +195,7 @@ app.post("/urls/:shortURL", (req, res) => {
         long
     } = req.body;
     //Here, I could use my middleware and access req.sauceIndex
-    urlDatabase[id] = long;
+    users[id]['email'] = long;
     res.redirect("/urls");
 });
 
