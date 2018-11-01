@@ -20,9 +20,9 @@ function generateRandomString() {
     var str = '';
     var alphs = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     for (var i = 6; i > 0; --i) {
-        str += alphs[Math.floor(Math.random() * chars.length)];
+        str += alphs[Math.floor(Math.random() * alphs.length)];
     }
-    return result;
+    return str;
 };
 //Our Database
 var urlDatabase = {
@@ -31,23 +31,23 @@ var urlDatabase = {
     "8sc9m1": "http://www.youtube.com"
 };
 //User database
-const users = { 
+const users = {
     "userRandomID": {
-      id: "userRandomID", 
-      email: "user@example.com", 
-      password: "purple-monkey-dinosaur"
+        id: "userRandomID",
+        email: "user@example.com",
+        password: "purple-monkey-dinosaur"
     },
-   "user2RandomID": {
-      id: "user2RandomID", 
-      email: "user2@example.com", 
-      password: "dishwasher-funk"
+    "user2RandomID": {
+        id: "user2RandomID",
+        email: "user2@example.com",
+        password: "dishwasher-funk"
     }
-  }
+}
 //Route to POST where we submit the login form
 app.post("/login", (req, res) => {
-    let templateVars = {
-        userName: req.cookies["userName"],
-    };
+    // let templateVars = {
+    //     userName: req.cookies["userName"],
+    // };
     const {
         userName
     } = req.body;
@@ -57,13 +57,16 @@ app.post("/login", (req, res) => {
 
 
 app.post("/register", (req, res) => {
-    let templateVars = {
-        userName: req.cookies["userName"],
-    };
-    const {
-        userName
-    } = req.body;
-    res.cookie('userName', userName);
+
+    let newId = generateRandomString();
+    const { email, password } = req.body;
+    let newUser = {
+            id: newId,
+            email: email,
+            password: password
+        };
+    users[newId] = newUser;
+    console.log(users);
     res.redirect("/urls");
 });
 
