@@ -39,10 +39,12 @@ app.post("/login", (req, res) => {
     let templateVars = {
         userName: req.cookies["userName"],
     };
-    const { userName } = req.body; 
+    const {
+        userName
+    } = req.body;
     // console.log(userName);
-    res.cookie('userName', userName); 
-    
+    res.cookie('userName', userName);
+
     res.redirect("/urls");
 });
 
@@ -85,7 +87,7 @@ app.get("/urls/new", (req, res) => {
     let templateVars = {
         userName: req.cookies["userName"],
         // ... any other vars
-      };
+    };
     res.render("urls_new", templateVars);
 });
 
