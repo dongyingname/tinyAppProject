@@ -83,7 +83,6 @@ const users = {
 app.get("/urls", (req, res) => {
     let templateVars = {
         users: users,
-        userName: req.cookies["userName"],
         user_id: req.cookies["user_id"]
     };
 
@@ -94,7 +93,6 @@ app.get("/urls", (req, res) => {
 app.get("/login", (req, res) => {
     let templateVars = {
         users: users,
-        userName: req.cookies["userName"],
         user_id: req.cookies["user_id"]
     };
 
@@ -111,7 +109,6 @@ app.get("/register", (req, res) => {
 app.get("/urls/new", (req, res) => {
     let templateVars = {
         users: users,
-        userName: req.cookies["userName"],
         user_id: req.cookies["user_id"]
     };
     res.render("urls_new", templateVars);
@@ -130,7 +127,6 @@ app.get("/urls/:id", (req, res) => {
         shortURL: req.params.id,
         longURL,
         users: users,
-        userName: req.cookies["userName"],
         user_id: req.cookies["user_id"]
     };
     res.render("urls_show", templateVars);
