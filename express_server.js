@@ -106,8 +106,14 @@ app.post("/login", (req, res) => {
     const {
         userName
     } = req.body;
-    res.cookie('userName', userName);
-    res.redirect("/urls");
+
+    if (ifEmail(userName)) {
+
+        res.cookie('userName', userName);
+        res.redirect("/urls");
+    } else {
+        res.status(400).send("Status Code 400!! You need to register first!!");
+    }
 });
 
 //A POST route that take the register info and determine whether to send
@@ -119,8 +125,6 @@ app.post("/register", (req, res) => {
         email,
         password
     } = req.body;
-    console.log(ifEmail(email));
-    
     if (email && password && !ifEmail(email)) {
         let newUser = {
             id: newId,
@@ -131,11 +135,9 @@ app.post("/register", (req, res) => {
         //console.log(users);
         res.cookie('user_id', newId);
         res.redirect("/urls");
-    }
-    else if (ifEmail(email)){
+    } else if (ifEmail(email)) {
         res.status(400).send("Status Code 400!! The email already exists!!");
-    }
-    else {
+    } else {
         res.status(400).send("Status Code 400!! Please Enter Something!!");
     }
 });
