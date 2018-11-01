@@ -2,24 +2,34 @@
 <html lang="en">
 
 <head>
-    <title>TinyApp</title>
+    
 
 <body>
-    <% include partials/_header1 %>
+    <title>TinyApp</title>
+    <% include partials/_header %>
+    <style>
+            ul#hi {
+                list-style-type: none;
+                line-height: 150%;
+            }
+            
+ </style>
 </body>
 
 </head>
 
 <body>
-    <ul>
+    <ul id="hi">
         <% for (let i in urls) { %>
-        <li>
+        <li id="ha">
             <%= i %> --- <%= urls[i]; %>
         </li>
+        <li>
         <a href="<%= `/urls/${i}` %>">Edit</a>
         <form method="POST" action="<%= `/urls/${i}` %>/delete">
             <input type="Submit" value="Delete">
         </form>
+    </li>
         <% } %>
 
     </ul>

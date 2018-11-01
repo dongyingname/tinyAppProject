@@ -47,6 +47,12 @@ app.post("/login", (req, res) => {
 });
 
 
+//Route to handle logout POST request
+app.post("/logout", (req, res) => {
+    res.clearCookie("userName");
+    res.redirect("/urls");
+});
+
 //Route to print out urls in /urls 
 app.get("/urls", (req, res) => {
     let templateVars = {
