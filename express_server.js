@@ -42,16 +42,17 @@ function ifMatch(email, password) {
     //1:Correct combination
     //2:Correct email, wrong password
     //3:email dosn't exist
-    let ifEx = 0;    
+    let ifEx = [];    
     for (let i in users) {
-        console.log(i);
         if (users[i]['email'] == email && password == users[i].password) {
-            ifEx = 1;
+            ifEx[0] = 1;
+            ifEx[1] = i;
+            //console.log(ifEx[1]);
         } else if (users[i]['email'] == email && password != users[i].password) {
-            ifEx = 2;
+            ifEx[0] = 2;
            // console.log(users[i]['password'])
         } else {
-            ifEx = 3;
+            ifEx[0] = 3;
         }
         
     }
@@ -137,13 +138,13 @@ app.post("/login", (req, res) => {
         userName,
         password
     } = req.body;
-    console.log(ifMatch(userName, password));
-    if (ifMatch(userName, password) == 1){
-        res.cookie('userName', userName);
+    if (ifMatch(userName, password)[0] == 1){
+        let user_id = ifMatch(userName, password)[1];
+        res.cookie('user_id', user_id);
         res.redirect("/urls");
-    } else if (ifMatch(userName, password) == 2){
+    } else if (ifMatch(userName, password)[0] == 2){
         res.status(400).send("Status Code 400!! Wrong Password!!");
-    } else if (ifMatch(userName, password) == 3){
+    } else if (ifMatch(userName, password)[0] == 3){
         res.status(400).send("Status Code 400!! Please Register First!!");
     }
 });
@@ -176,7 +177,7 @@ app.post("/register", (req, res) => {
 
 //Route to handle logout POST request
 app.post("/logout", (req, res) => {
-    res.clearCookie("userName");
+    res.clearCookie("user_id");
     res.redirect("/urls");
 });
 
