@@ -4,9 +4,6 @@ var app = express();
 var cookieParser = require('cookie-parser');
 var PORT = 8080; // default port 8080
 
-//set cookie 'name' to value
-//
-
 //start up the ejs templating engine and cookie parser
 app.use(cookieParser());
 app.set("view engine", "ejs");
@@ -42,16 +39,31 @@ app.post("/login", (req, res) => {
     const {
         userName
     } = req.body;
-    // console.log(userName);
     res.cookie('userName', userName);
-
     res.redirect("/urls");
 });
-
 
 //Route to handle logout POST request
 app.post("/logout", (req, res) => {
     res.clearCookie("userName");
+    res.redirect("/urls");
+});
+
+//Post Route. Handles the delete button that was added to the main(index) page
+app.post("/urls/:shortURL/delete", (req, res) => {
+    let str = req.params.shortURL;
+    delete urlDatabase[str];
+    res.redirect("/urls");
+});
+
+//Post Route. Updates the longURL and shortURL
+app.post("/urls/:shortURL", (req, res) => {
+    const id = req.params.shortURL;
+    const {
+        long
+    } = req.body;
+    //Here, I could use my middleware and access req.sauceIndex
+    urlDatabase[id] = long;
     res.redirect("/urls");
 });
 
@@ -63,23 +75,6 @@ app.get("/urls", (req, res) => {
     };
 
     res.render("urls_index", templateVars);
-});
-
-//Post Route. Handles the delete button that was added to the main(index) page
-app.post("/urls/:shortURL/delete", (req, res) => {
-    let str = req.params.shortURL;
-    delete urlDatabase[str];
-    res.redirect("/urls");
-});
-//Post Route. Updates the longURL and shortURL
-app.post("/urls/:shortURL", (req, res) => {
-    const id = req.params.shortURL;
-    const {
-        long
-    } = req.body;
-    //Here, I could use my middleware and access req.sauceIndex
-    urlDatabase[id] = long;
-    res.redirect("/urls");
 });
 
 //Route for post
@@ -97,13 +92,7 @@ app.get("/u/:shortURL", (req, res) => {
     res.redirect(longURL);
 });
 
-//Route for test  
-// app.post("/urls", (req, res) => {
-//     console.log(req.body); // debug statement to see POST parameters
-//     res.send("Ok"); // Respond with 'Ok' (we will replace this)
-// });
-
-//Second route
+//Route to edit the longURL
 app.get("/urls/:id", (req, res) => {
     let longURL = urlDatabase[req.params.id];
     let templateVars = {
@@ -114,12 +103,12 @@ app.get("/urls/:id", (req, res) => {
     res.render("urls_show", templateVars);
 });
 
-//main page
+//Root Page
 app.get("/", (req, res) => {
     res.send("Hello!");
 });
 
-//display full URL
+//Display full URL
 app.get("/urls.json", (req, res) => {
     res.json(urlDatabase);
 });
