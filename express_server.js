@@ -56,11 +56,53 @@ const users = {
     }
 }
 
+
+
+//Route to print out urls in /urls 
+app.get("/urls", (req, res) => {
+    let templateVars = {
+        users: users,
+        userName: req.cookies["userName"],
+    };
+
+    res.render("urls_index", templateVars);
+});
+
+//Register GET route. Sends the user to register page if the user doesn't log in yet
+//could've created a simple button in the HTML than put another GET route in the server
+app.get("/register", (req, res) => {
+    res.render("url_register");
+});
+
+//Route for post
+app.get("/urls/new", (req, res) => {
+    let templateVars = {
+        users: users,
+        userName: req.cookies["userName"],
+    };
+    res.render("urls_new", templateVars);
+});
+
+//Route to redirect
+app.get("/u/:shortURL", (req, res) => {
+    let longURL = urlDatabase[req.params.shortURL];
+    res.redirect(longURL);
+});
+
+//Route to edit the longURL
+app.get("/urls/:id", (req, res) => {
+    let longURL = urlDatabase[req.params.id];
+    let templateVars = {
+        shortURL: req.params.id,
+        longURL,
+        users: users,
+        userName: req.cookies["userName"]
+    };
+    res.render("urls_show", templateVars);
+});
+
 //Route to POST where we submit the login form
 app.post("/login", (req, res) => {
-    // let templateVars = {
-    //     userName: req.cookies["userName"],
-    // };
     const {
         userName
     } = req.body;
@@ -68,7 +110,8 @@ app.post("/login", (req, res) => {
     res.redirect("/urls");
 });
 
-
+//A POST route that take the register info and determine whether to send
+//to cookie based on the validity of the info
 app.post("/register", (req, res) => {
 
     let newId = generateRandomString();
@@ -90,13 +133,12 @@ app.post("/register", (req, res) => {
         res.redirect("/urls");
     }
     else if (ifEmail(email)){
-        res.status(400).send('The email already exists!!');
+        res.status(400).send("Status Code 400!! The email already exists!!");
     }
     else {
-        res.status(400).send('Please Enter Something!!');
+        res.status(400).send("Status Code 400!! Please Enter Something!!");
     }
 });
-
 
 //Route to handle logout POST request
 app.post("/logout", (req, res) => {
@@ -122,46 +164,8 @@ app.post("/urls/:shortURL", (req, res) => {
     res.redirect("/urls");
 });
 
-//Route to print out urls in /urls 
-app.get("/urls", (req, res) => {
-    let templateVars = {
-        urls: urlDatabase,
-        userName: req.cookies["userName"],
-    };
 
-    res.render("urls_index", templateVars);
-});
 
-//Register GET route. Sends the user to register page if the user doesn't log in yet
-//could've created a simple button in the HTML than put another GET route in the server
-app.get("/register", (req, res) => {
-    res.render("url_register");
-});
-
-//Route for post
-app.get("/urls/new", (req, res) => {
-    let templateVars = {
-        userName: req.cookies["userName"],
-    };
-    res.render("urls_new", templateVars);
-});
-
-//Route to redirect
-app.get("/u/:shortURL", (req, res) => {
-    let longURL = urlDatabase[req.params.shortURL];
-    res.redirect(longURL);
-});
-
-//Route to edit the longURL
-app.get("/urls/:id", (req, res) => {
-    let longURL = urlDatabase[req.params.id];
-    let templateVars = {
-        shortURL: req.params.id,
-        longURL,
-        userName: req.cookies["userName"]
-    };
-    res.render("urls_show", templateVars);
-});
 
 //Root Page
 app.get("/", (req, res) => {

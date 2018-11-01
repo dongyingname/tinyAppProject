@@ -15,10 +15,10 @@
 </head>
 <body>
     <ul id="hi">
-        <% for (let i in urls) { %>
+        <% for (let i in users) { %>
         <li id="ha">
             <%= i %> ---
-            <%= urls[i]; %>
+            <%= users[i]['email']; %>
         </li>
         <li>
             <a href="<%= `/urls/${i}` %>">Edit</a>
