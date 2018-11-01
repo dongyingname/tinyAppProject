@@ -36,9 +36,13 @@ var urlDatabase = {
 
 //Route to POST where we submit the login form
 app.post("/login", (req, res) => {
+    let templateVars = {
+        username: req.cookies["username"],
+    };
     const { userName } = req.body; 
-    console.log(userName);
+    // console.log(userName);
     res.cookie('userName', userName); 
+    
     res.redirect("/urls");
 });
 
@@ -46,7 +50,8 @@ app.post("/login", (req, res) => {
 //Route to print out urls in /urls 
 app.get("/urls", (req, res) => {
     let templateVars = {
-        urls: urlDatabase
+        urls: urlDatabase,
+        username: req.cookies["userName"],
     };
 
     res.render("urls_index", templateVars);
@@ -61,7 +66,6 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 //Post Route. Updates the longURL and shortURL
 app.post("/urls/:shortURL", (req, res) => {
     const id = req.params.shortURL;
-    console.log(id);
     const {
         long
     } = req.body;
@@ -72,7 +76,11 @@ app.post("/urls/:shortURL", (req, res) => {
 
 //Route for post
 app.get("/urls/new", (req, res) => {
-    res.render("urls_new");
+    let templateVars = {
+        username: req.cookies["username"],
+        // ... any other vars
+      };
+    res.render("urls_new", templateVars);
 });
 
 //Route to redirect
