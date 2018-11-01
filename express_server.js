@@ -61,9 +61,18 @@ function ifMatch(email, password) {
 
 //Our DatabaseurlDatabase
 var urlDatabase = {
-    "b2xVn2": "http://www.lighthouselabs.ca",
-    "9sm5xK": "http://www.google.com",
-    "8sc9m1": "http://www.youtube.com"
+    "b2xVn2": {
+        longURl: "http://www.lighthouselabs.ca",
+        userID: "aslnds"
+    },
+    "9sm5xK": {
+        longURL: "http://www.google.com",
+        userID: "adlkas"
+    },
+    "8sc9m1": {
+        longURL: "http://www.youtube.com",
+        userID: "ssoool"
+    }
 };
 //User database
 const users = {
