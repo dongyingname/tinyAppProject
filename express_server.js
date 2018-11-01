@@ -30,7 +30,19 @@ var urlDatabase = {
     "9sm5xK": "http://www.google.com",
     "8sc9m1": "http://www.youtube.com"
 };
-
+//User database
+const users = { 
+    "userRandomID": {
+      id: "userRandomID", 
+      email: "user@example.com", 
+      password: "purple-monkey-dinosaur"
+    },
+   "user2RandomID": {
+      id: "user2RandomID", 
+      email: "user2@example.com", 
+      password: "dishwasher-funk"
+    }
+  }
 //Route to POST where we submit the login form
 app.post("/login", (req, res) => {
     let templateVars = {
@@ -42,6 +54,19 @@ app.post("/login", (req, res) => {
     res.cookie('userName', userName);
     res.redirect("/urls");
 });
+
+
+app.post("/register", (req, res) => {
+    let templateVars = {
+        userName: req.cookies["userName"],
+    };
+    const {
+        userName
+    } = req.body;
+    res.cookie('userName', userName);
+    res.redirect("/urls");
+});
+
 
 //Route to handle logout POST request
 app.post("/logout", (req, res) => {
@@ -77,11 +102,16 @@ app.get("/urls", (req, res) => {
     res.render("urls_index", templateVars);
 });
 
+//Register GET route. Sends the user to register page if the user doesn't log in yet
+//could've created a simple button in the HTML than put another GET route in the server
+app.get("/register", (req, res) => {
+    res.render("url_register");
+});
+
 //Route for post
 app.get("/urls/new", (req, res) => {
     let templateVars = {
         userName: req.cookies["userName"],
-        // ... any other vars
     };
     res.render("urls_new", templateVars);
 });

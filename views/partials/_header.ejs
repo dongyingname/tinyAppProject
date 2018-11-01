@@ -14,7 +14,7 @@
     <ul>
         <% if (userName){ %>
         <li id="h">
-            Hi User
+            Hi
             <%= userName %>
         </li>
         <li id="h">
@@ -24,8 +24,11 @@
         </li>
         <% } else { %>
         <form method="POST" action="/login" <label>Please Type In Your Username</label>
-            <input type="text" name="userName" value="username">
-            <input type="submit" value="Update!">
+           <li class="good"> <input type="text" name="userName" value="username"></li>
+            <li class="good"> <input type="submit" value="Update!"> </li>
+        </form>
+        <form method="GET" action="/register">
+           <li> <input type="submit" value="Register!"> </li> 
         </form>
         <% } %>
     </ul>
