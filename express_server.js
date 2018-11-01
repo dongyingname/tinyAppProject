@@ -36,7 +36,8 @@ var urlDatabase = {
 
 //Route to POST where we submit the login form
 app.post("/login", (req, res) => {
-    res.cookie(userName, 'value'); 
+    res.cookie(userName, '1'); 
+    res.redirect("/urls");
 });
 
 
