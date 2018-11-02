@@ -19,7 +19,7 @@
     <ul id="hi">
         <% for (let i in urls) { %>
         <li>
-            <%= i %> ---
+            <a href="/u/<%= i %>" target="_blank"><%= i %> ---</a>
             <% if (user_id == urls[i]['userID']){ %>
             <%= urls[i]['longURL']; %>
         </li>

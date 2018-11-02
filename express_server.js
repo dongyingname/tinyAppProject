@@ -3,12 +3,12 @@
 //cookie-session: a cookie encrypt engine
 //initiate bcypt hashing engine
 //default port 8080
-var express = require("express");
-var app = express();
+const express = require("express");
+const app = express();
 app.set("view engine", "ejs");
-var cookieSession = require('cookie-session');
+const cookieSession = require('cookie-session');
 const bcrypt = require('bcrypt');
-var PORT = 8080;
+const PORT = 8080;
 
 //start engine bodyParser
 const bodyParser = require("body-parser");
@@ -100,7 +100,7 @@ const users = {
 
 //GET route to our main page 
 app.get("/urls", (req, res) => {
-    
+
     let templateVars = {
         users: users,
         user_id: req.session.user_id,
