@@ -4,6 +4,11 @@ var app = express();
 var cookieParser = require('cookie-parser');
 var PORT = 8080; // default port 8080
 
+//initiate bcypt hashing engine
+const bcrypt = require('bcrypt');
+const password = "purple-monkey-dinosaur"; // you will probably this from req.params
+const hashedPassword = bcrypt.hashSync(password, 10);
+
 //start up the ejs templating engine and cookie parser
 app.use(cookieParser());
 app.set("view engine", "ejs");
@@ -97,7 +102,7 @@ app.get("/urls", (req, res) => {
     };
 
     let userID = req.cookies["user_id"];
-    console.log(userID);
+
     if (userID) {
         res.render("urls_index", templateVars);
     } else {

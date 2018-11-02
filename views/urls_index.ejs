@@ -21,8 +21,9 @@
 
         <% for (let i in urls) { %>
         <li>
-            <% if (user_id == urls[i]['userID']){ %>
             <%= i %> ---
+            <% if (user_id == urls[i]['userID']){ %>
+
             <%= urls[i]['longURL']; %>
         </li>
 
