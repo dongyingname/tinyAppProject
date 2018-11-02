@@ -62,7 +62,7 @@ function ifMatch(email, password) {
 //Our DatabaseurlDatabase
 var urlDatabase = {
     "b2xVn2": {
-        longURl: "http://www.lighthouselabs.ca",
+        longURL: "http://www.lighthouselabs.ca",
         userID: "aslnds"
     },
     "9sm5xK": {
@@ -92,9 +92,9 @@ const users = {
 app.get("/urls", (req, res) => {
     let templateVars = {
         users: users,
-        user_id: req.cookies["user_id"]
+        user_id: req.cookies["user_id"],
+        urls: urlDatabase
     };
-
     res.render("urls_index", templateVars);
 });
 
@@ -137,13 +137,14 @@ app.get("/u/:shortURL", (req, res) => {
 
 //Route to edit the longURL
 app.get("/urls/:id", (req, res) => {
-    let longURL = users[req.params.id]['email'];
+    let longURL = urlDatabase[req.params.id]['longURL'];
     let templateVars = {
         shortURL: req.params.id,
         longURL,
         users: users,
         user_id: req.cookies["user_id"]
     };
+
     res.render("urls_show", templateVars);
 });
 
@@ -198,22 +199,56 @@ app.post("/logout", (req, res) => {
 
 //Post Route. Handles the delete button that was added to the main(index) page
 app.post("/urls/:shortURL/delete", (req, res) => {
-    let str = req.params.shortURL;
-    delete users[str];
-    res.redirect("/urls");
+    const str = req.params.shortURL;
+    const user_id = req.cookies["user_id"];
+    if (user_id && user_id == urlDatabase[str]['userID']) {
+        delete urlDatabase[str];
+        res.redirect("/urls");
+    } else if (user_id) {
+        res.send("You can only delete your own URL");
+    } else {
+        res.redirect("/login");
+    }
+
 });
 
 //Post Route. Updates the longURL and shortURL
 app.post("/urls/:shortURL", (req, res) => {
-    const id = req.params.shortURL;
+    const str = req.params.shortURL;
+    const user_id = req.cookies["user_id"];
     const {
-        long
+        longURL
     } = req.body;
-    //Here, I could use my middleware and access req.sauceIndex
-    users[id]['email'] = long;
-    res.redirect("/urls");
+    console.log(user_id);
+    console.log(urlDatabase);
+    if (user_id && user_id == urlDatabase[str]['userID']) {
+        urlDatabase[str]['longURL'] = longURL;
+        res.redirect("/urls");
+    } else if (user_id) {
+        res.send("You can only edit your own URL");
+    } else {
+        res.redirect("/login");
+    }
 });
 
+//Post Route. Create a new URL and add it to the urlDatabase
+app.post("/urls", (req, res) => {
+    const {
+        longURL
+    } = req.body;
+    const newId = generateRandomString();
+    const user_id = req.cookies["user_id"];
+    if (user_id) {
+        urlDatabase[newId] = {
+            longURL: longURL,
+            userID: user_id
+        };
+        res.redirect("/urls");
+    } else {
+
+        red.redirect("/login");
+    }
+});
 
 
 
