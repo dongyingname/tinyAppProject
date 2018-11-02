@@ -17,6 +17,11 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+app.use(cookieSession({
+    name: 'session',
+    keys: ['kklasdnknaldk', 'iawodhihqq']
+}));
+
 
 
 // A function that generate a digit string
@@ -96,11 +101,11 @@ const users = {
 app.get("/urls", (req, res) => {
     let templateVars = {
         users: users,
-        user_id: req.cookies["user_id"],
+        user_id: req.session.user_id,
         urls: urlDatabase
     };
 
-    let userID = req.cookies["user_id"];
+    let userID = req.session.user_id;
 
     if (userID) {
         res.render("urls_index", templateVars);
@@ -111,9 +116,10 @@ app.get("/urls", (req, res) => {
 
 //Route to Login page
 app.get("/login", (req, res) => {
+    
     let templateVars = {
         users: users,
-        user_id: req.cookies["user_id"]
+        user_id: req.session.user_id
     };
 
     res.render("url_login", templateVars);
@@ -127,13 +133,12 @@ app.get("/register", (req, res) => {
 
 //Route for post
 app.get("/urls/new", (req, res) => {
+    const user_id = req.session.user_id;
     let templateVars = {
         users: users,
-        user_id: req.cookies["user_id"]
+        user_id: req.session.user_id
     };
-    let ifId = req.cookies["user_id"];
-
-    if (ifId) {
+    if (user_id) {
         res.render("urls_new", templateVars);
     } else {
         res.redirect("/login");
@@ -153,7 +158,7 @@ app.get("/urls/:id", (req, res) => {
         shortURL: req.params.id,
         longURL,
         users: users,
-        user_id: req.cookies["user_id"]
+        user_id: req.session.user_id
     };
 
     res.render("urls_show", templateVars);
@@ -168,7 +173,8 @@ app.post("/login", (req, res) => {
 
     if (ifMatch(userName, password)[0] == 1) {
         let user_id = ifMatch(userName, password)[1];
-        res.cookie('user_id', user_id);
+        req.session.user_id = user_id;
+
         res.redirect("/urls");
     } else if (ifMatch(userName, password)[0] == 2) {
         res.status(400).send("Status Code 400!! Wrong Password!!");
@@ -195,8 +201,8 @@ app.post("/register", (req, res) => {
             password: hashPass
         };
         users[newId] = newUser;
-        //console.log(users);
-        res.cookie('user_id', newId);
+
+        
         res.redirect("/urls");
     } else if (ifEmail(email)) {
         res.status(400).send("Status Code 400!! The email already exists!!");
@@ -207,14 +213,14 @@ app.post("/register", (req, res) => {
 
 //Route to handle logout POST request
 app.post("/logout", (req, res) => {
-    res.clearCookie("user_id");
+    delete req.session.user_id;;
     res.redirect("/urls");
 });
 
 //Post Route. Handles the delete button that was added to the main(index) page
 app.post("/urls/:shortURL/delete", (req, res) => {
     const str = req.params.shortURL;
-    const user_id = req.cookies["user_id"];
+    const user_id= req.session.user_id;
     if (user_id && user_id == urlDatabase[str]['userID']) {
         delete urlDatabase[str];
         res.redirect("/urls");
@@ -229,12 +235,10 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 //Post Route. Updates the longURL and shortURL
 app.post("/urls/:shortURL", (req, res) => {
     const str = req.params.shortURL;
-    const user_id = req.cookies["user_id"];
+    const user_id = req.session.user_id;
     const {
         longURL
     } = req.body;
-    console.log(user_id);
-    console.log(urlDatabase);
     if (user_id && user_id == urlDatabase[str]['userID']) {
         urlDatabase[str]['longURL'] = longURL;
         res.redirect("/urls");
@@ -251,7 +255,8 @@ app.post("/urls", (req, res) => {
         longURL
     } = req.body;
     const newId = generateRandomString();
-    const user_id = req.cookies["user_id"];
+    user_id = req.session.user_id;
+   
     if (user_id) {
         urlDatabase[newId] = {
             longURL: longURL,
@@ -260,7 +265,7 @@ app.post("/urls", (req, res) => {
         res.redirect("/urls");
     } else {
 
-        red.redirect("/login");
+        res.redirect("/login");
     }
 });
 
