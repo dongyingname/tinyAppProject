@@ -6,9 +6,6 @@ var PORT = 8080; // default port 8080
 
 //initiate bcypt hashing engine
 const bcrypt = require('bcrypt');
-const password = "purple-monkey-dinosaur"; // you will probably this from req.params
-const hashedPassword = bcrypt.hashSync(password, 10);
-
 //start up the ejs templating engine and cookie parser
 app.use(cookieParser());
 app.set("view engine", "ejs");
@@ -49,7 +46,7 @@ function ifMatch(email, password) {
     //3:email dosn't exist
     let ifEx = [];
     for (let i in users) {
-        if (users[i]['email'] == email && password == users[i].password) {
+        if (users[i]['email'] == email && bcrypt.compareSync(password, users[i].password)) {
             ifEx[0] = 1;
             ifEx[1] = i;
             //console.log(ifEx[1]);
@@ -166,6 +163,7 @@ app.post("/login", (req, res) => {
         userName,
         password
     } = req.body;
+
     if (ifMatch(userName, password)[0] == 1) {
         let user_id = ifMatch(userName, password)[1];
         res.cookie('user_id', user_id);
@@ -186,11 +184,13 @@ app.post("/register", (req, res) => {
         email,
         password
     } = req.body;
+    const hashPass = bcrypt.hashSync(password, 15);
+
     if (email && password && !ifEmail(email)) {
         let newUser = {
             id: newId,
             email: email,
-            password: password
+            password: hashPass
         };
         users[newId] = newUser;
         //console.log(users);
