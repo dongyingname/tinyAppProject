@@ -100,6 +100,7 @@ const users = {
 
 //GET route to our main page 
 app.get("/urls", (req, res) => {
+    
     let templateVars = {
         users: users,
         user_id: req.session.user_id,
@@ -112,22 +113,21 @@ app.get("/urls", (req, res) => {
 
 //GET route to Login page
 app.get("/login", (req, res) => {
-    let templateVars = {
-        users: users,
-        user_id: req.session.user_id
-    };
-    res.render("url_login", templateVars);
+
+    res.render("url_login");
 });
 
 //Register GET route. Sends the user to register page if the user doesn't log in yet
 //could've created a simple button in the HTML than put another GET route in the server
 app.get("/register", (req, res) => {
+
     res.render("url_register");
 });
 
 //POST route to the URL creation page. Only accessible to user who logs in.
 app.get("/urls/new", (req, res) => {
-    const user_id = req.session.user_id;
+
+    let user_id = req.session.user_id;
     let templateVars = {
         users: users,
         user_id: req.session.user_id
@@ -141,12 +141,14 @@ app.get("/urls/new", (req, res) => {
 
 //Route to redirect to the longURL if the short URL exists in the database
 app.get("/u/:shortURL", (req, res) => {
+
     let longURL = urlDatabase[req.params.shortURL]['longURL'];
     res.redirect(longURL);
 });
 
 //Route to edit the longURL
 app.get("/urls/:id", (req, res) => {
+
     let longURL = urlDatabase[req.params.id]['longURL'];
     let templateVars = {
         shortURL: req.params.id,
@@ -160,7 +162,8 @@ app.get("/urls/:id", (req, res) => {
 
 //Route to POST where we submit the login form
 app.post("/login", (req, res) => {
-    const {
+
+    let {
         userName,
         password
     } = req.body;
@@ -250,7 +253,7 @@ app.post("/urls", (req, res) => {
     } = req.body;
     const newId = generateRandomString();
     user_id = req.session.user_id;
-    
+
     if (user_id) {
         urlDatabase[newId] = {
             longURL: longURL,
