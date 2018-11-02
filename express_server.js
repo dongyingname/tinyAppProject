@@ -1,16 +1,14 @@
-//get all the tools:express cookie-parser
+//get all the tools: express, cookie session
+//start up the ejs templating engine and cookie parser
+//cookie-session: a cookie encrypt engine
+//initiate bcypt hashing engine
+//default port 8080
 var express = require("express");
 var app = express();
-//default port 8080
-var PORT = 8080;
-//cookie-session: a cookie encrypt engine
-var cookieSession = require('cookie-session'); //
-
-//initiate bcypt hashing engine
-const bcrypt = require('bcrypt');
-
-//start up the ejs templating engine and cookie parser
 app.set("view engine", "ejs");
+var cookieSession = require('cookie-session');
+const bcrypt = require('bcrypt');
+var PORT = 8080;
 
 //start engine bodyParser
 const bodyParser = require("body-parser");
@@ -18,24 +16,26 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+//Set cookie session.
 app.use(cookieSession({
     name: 'session',
     keys: ['kklasdnknaldk', 'iawodhihqq']
 }));
 
-
-
-// A function that generate a digit string
+// A function that generate a digit string, which is used for creating unencrypted user ID
+// and short URL
 function generateRandomString() {
     var str = '';
     var alphs = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     for (var i = 6; i > 0; --i) {
         str += alphs[Math.floor(Math.random() * alphs.length)];
     }
+
     return str;
 };
 
-//A function that finds whether a new email already exists
+//A function that finds whether a new email already exists,
+//when one is registering a new account to POST /login 
 function ifEmail(email) {
     let ifEx = false;
     for (let i in users) {
@@ -43,6 +43,7 @@ function ifEmail(email) {
             ifEx = true;
         }
     }
+
     return ifEx;
 }
 
@@ -63,6 +64,7 @@ function ifMatch(email, password) {
             ifEx[0] = 3;
         }
     }
+
     return ifEx;
 }
 
@@ -81,7 +83,8 @@ var urlDatabase = {
         userID: "ssoool"
     }
 };
-//User Info database
+//User Info database, contains generated 6 digit ID as the key, session encrypted id,
+//email, and bcrypt encrypted password
 const users = {
     "userRandomID": {
         id: "userRandomID",
@@ -103,15 +106,12 @@ app.get("/urls", (req, res) => {
         urls: urlDatabase
     };
 
-    let userID = req.session.user_id;
-
     res.render("urls_index", templateVars);
 
 });
 
 //GET route to Login page
 app.get("/login", (req, res) => {
-
     let templateVars = {
         users: users,
         user_id: req.session.user_id
@@ -154,6 +154,7 @@ app.get("/urls/:id", (req, res) => {
         users: users,
         user_id: req.session.user_id
     };
+
     res.render("urls_show", templateVars);
 });
 
@@ -163,6 +164,7 @@ app.post("/login", (req, res) => {
         userName,
         password
     } = req.body;
+
     if (ifMatch(userName, password)[0] == 1) {
         let user_id = ifMatch(userName, password)[1];
         req.session.user_id = user_id;
@@ -184,6 +186,7 @@ app.post("/register", (req, res) => {
         password
     } = req.body;
     const hashPass = bcrypt.hashSync(password, 15);
+
     if (email && password && !ifEmail(email)) {
         let newUser = {
             id: newId,
@@ -204,13 +207,14 @@ app.post("/register", (req, res) => {
 app.post("/logout", (req, res) => {
     delete req.session.user_id;;
     res.redirect("/urls");
-    urlsurls
+
 });
 
 //Post Route. Handles the delete button that was added to the main(index) page
 app.post("/urls/:shortURL/delete", (req, res) => {
     const str = req.params.shortURL;
     const user_id = req.session.user_id;
+
     if (user_id && user_id == urlDatabase[str]['userID']) {
         delete urlDatabase[str];
         res.redirect("/urls");
@@ -228,6 +232,7 @@ app.post("/urls/:shortURL", (req, res) => {
     const {
         longURL
     } = req.body;
+
     if (user_id && user_id == urlDatabase[str]['userID']) {
         urlDatabase[str]['longURL'] = longURL;
         res.redirect("/urls");
@@ -245,6 +250,7 @@ app.post("/urls", (req, res) => {
     } = req.body;
     const newId = generateRandomString();
     user_id = req.session.user_id;
+    
     if (user_id) {
         urlDatabase[newId] = {
             longURL: longURL,

@@ -1,2 +1,3 @@
 #Tiny App Project
-##[Ying Dong]'s second Project
+##By [Ying Dong]
+
