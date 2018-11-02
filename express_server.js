@@ -95,7 +95,14 @@ app.get("/urls", (req, res) => {
         user_id: req.cookies["user_id"],
         urls: urlDatabase
     };
-    res.render("urls_index", templateVars);
+
+    let userID = req.cookies["user_id"];
+    console.log(userID);
+    if (userID) {
+        res.render("urls_index", templateVars);
+    } else {
+        res.redirect("/login");
+    }
 });
 
 //Route to Login page

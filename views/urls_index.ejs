@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
 <body>
     <title>TinyApp</title>
     <% include partials/_header %>
@@ -13,19 +14,26 @@
  </style>
 </body>
 </head>
+
 <body>
     <ul id="hi">
+
+
         <% for (let i in urls) { %>
         <li>
+            <% if (user_id == urls[i]['userID']){ %>
             <%= i %> ---
             <%= urls[i]['longURL']; %>
         </li>
+
+
         <li>
             <a href="<%= `/urls/${i}` %>">Edit</a>
             <form method="POST" action="<%= `/urls/${i}` %>/delete">
                 <input type="Submit" value="Delete">
             </form>
         </li>
+        <% } %>
         <% } %>
 
     </ul>
