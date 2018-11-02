@@ -3,6 +3,7 @@ var express = require("express");
 var app = express();
 var cookieParser = require('cookie-parser');
 var PORT = 8080; // default port 8080
+var cookieSession = require('cookie-session');
 
 //initiate bcypt hashing engine
 const bcrypt = require('bcrypt');
@@ -15,6 +16,7 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+
 
 
 // A function that generate a digit string
