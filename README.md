@@ -19,7 +19,9 @@ $node express_server.js or
 $npm start 
 to run the web server
 ### Main Page localhost:8080/urls
-[Main Page]('../doc/login.png')
+[Main Page](../doc/login.png)
+[Log In page](https://github.com/dongyingname/tinyAppProject/blob/master/doc/login.png)
+[Create URL Page](https://github.com/dongyingname/tinyAppProject/blob/master/doc/new.png)
 ## Author
 [Ying Dong](https://github.com/dongyingname)
 --Currently a student of [Lighthouse Labs Web Dev BootCamp](https://lighthouselabs.ca/web-bootcamp)
