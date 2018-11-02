@@ -1,14 +1,15 @@
 //get all the tools:express cookie-parser
 var express = require("express");
 var app = express();
-var cookieParser = require('cookie-parser');
-var PORT = 8080; // default port 8080
-var cookieSession = require('cookie-session');
+//default port 8080
+var PORT = 8080;
+//cookie-session: a cookie encrypt engine
+var cookieSession = require('cookie-session'); //
 
 //initiate bcypt hashing engine
 const bcrypt = require('bcrypt');
+
 //start up the ejs templating engine and cookie parser
-app.use(cookieParser());
 app.set("view engine", "ejs");
 
 //start engine bodyParser
@@ -46,7 +47,7 @@ function ifEmail(email) {
 }
 
 //A function to determine whether the username and password combination
-// exists in the users object
+//exists in the users object
 function ifMatch(email, password) {
     //1:Correct combination
     //2:Correct email, wrong password
@@ -56,19 +57,16 @@ function ifMatch(email, password) {
         if (users[i]['email'] == email && bcrypt.compareSync(password, users[i].password)) {
             ifEx[0] = 1;
             ifEx[1] = i;
-            //console.log(ifEx[1]);
         } else if (users[i]['email'] == email && password != users[i].password) {
             ifEx[0] = 2;
-            // console.log(users[i]['password'])
         } else {
             ifEx[0] = 3;
         }
-
     }
     return ifEx;
 }
 
-//Our DatabaseurlDatabase
+//Our URL Database
 var urlDatabase = {
     "b2xVn2": {
         longURL: "http://www.lighthouselabs.ca",
@@ -83,7 +81,7 @@ var urlDatabase = {
         userID: "ssoool"
     }
 };
-//User database
+//User Info database
 const users = {
     "userRandomID": {
         id: "userRandomID",
@@ -97,7 +95,7 @@ const users = {
     }
 }
 
-//Route to print out urls in /urls 
+//GET route to our main page 
 app.get("/urls", (req, res) => {
     let templateVars = {
         users: users,
@@ -111,14 +109,13 @@ app.get("/urls", (req, res) => {
 
 });
 
-//Route to Login page
+//GET route to Login page
 app.get("/login", (req, res) => {
 
     let templateVars = {
         users: users,
         user_id: req.session.user_id
     };
-
     res.render("url_login", templateVars);
 });
 
@@ -128,7 +125,7 @@ app.get("/register", (req, res) => {
     res.render("url_register");
 });
 
-//Route for post
+//POST route to the URL creation page. Only accessible to user who logs in.
 app.get("/urls/new", (req, res) => {
     const user_id = req.session.user_id;
     let templateVars = {
@@ -142,9 +139,9 @@ app.get("/urls/new", (req, res) => {
     }
 });
 
-//Route to redirect
+//Route to redirect to the longURL if the short URL exists in the database
 app.get("/u/:shortURL", (req, res) => {
-    let longURL = users[req.params.shortURL]['email'];
+    let longURL = urlDatabase[req.params.shortURL]['longURL'];
     res.redirect(longURL);
 });
 
@@ -157,7 +154,6 @@ app.get("/urls/:id", (req, res) => {
         users: users,
         user_id: req.session.user_id
     };
-
     res.render("urls_show", templateVars);
 });
 
@@ -167,30 +163,27 @@ app.post("/login", (req, res) => {
         userName,
         password
     } = req.body;
-
     if (ifMatch(userName, password)[0] == 1) {
         let user_id = ifMatch(userName, password)[1];
         req.session.user_id = user_id;
-
         res.redirect("/urls");
     } else if (ifMatch(userName, password)[0] == 2) {
-        res.status(400).send("Status Code 400!! Wrong Password!!");
+        res.status(403).send("Status Code 403!! Wrong Password!! Please go back to the previous page");
     } else if (ifMatch(userName, password)[0] == 3) {
-        res.status(400).send("Status Code 400!! Please Register First!!");
+        res.status(403).send("Status Code 403!!Please Register First!! Please go back to the previous page");
     }
 });
 
 //A POST route that take the register info and determine whether to send
 //to cookie based on the validity of the info
 app.post("/register", (req, res) => {
-   
+
     let newId = generateRandomString();
     const {
         email,
         password
     } = req.body;
     const hashPass = bcrypt.hashSync(password, 15);
-
     if (email && password && !ifEmail(email)) {
         let newUser = {
             id: newId,
@@ -211,6 +204,7 @@ app.post("/register", (req, res) => {
 app.post("/logout", (req, res) => {
     delete req.session.user_id;;
     res.redirect("/urls");
+    urlsurls
 });
 
 //Post Route. Handles the delete button that was added to the main(index) page
@@ -225,7 +219,6 @@ app.post("/urls/:shortURL/delete", (req, res) => {
     } else {
         res.redirect("/login");
     }
-
 });
 
 //Post Route. Updates the longURL and shortURL
@@ -252,7 +245,6 @@ app.post("/urls", (req, res) => {
     } = req.body;
     const newId = generateRandomString();
     user_id = req.session.user_id;
-
     if (user_id) {
         urlDatabase[newId] = {
             longURL: longURL,
@@ -260,19 +252,16 @@ app.post("/urls", (req, res) => {
         };
         res.redirect("/urls");
     } else {
-
         res.redirect("/login");
     }
 });
 
-
-
-//Root Page
+//Root Page. 
 app.get("/", (req, res) => {
     res.send("Hello!");
 });
 
-//Display full URL
+//Display all URLs in the urlDatabase
 app.get("/urls.json", (req, res) => {
     res.json(urlDatabase);
 });
