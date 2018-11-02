@@ -15,7 +15,7 @@
         <% if (user_id){ %>
         <li id="h">
             Hi
-            <%= user_id %>
+            <%= users[user_id]['email'] %>
         </li>
         <li id="h">
             <form method="POST" action="/logout">

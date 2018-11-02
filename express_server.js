@@ -107,16 +107,13 @@ app.get("/urls", (req, res) => {
 
     let userID = req.session.user_id;
 
-    if (userID) {
-        res.render("urls_index", templateVars);
-    } else {
-        res.redirect("/login");
-    }
+    res.render("urls_index", templateVars);
+
 });
 
 //Route to Login page
 app.get("/login", (req, res) => {
-    
+
     let templateVars = {
         users: users,
         user_id: req.session.user_id
@@ -186,7 +183,7 @@ app.post("/login", (req, res) => {
 //A POST route that take the register info and determine whether to send
 //to cookie based on the validity of the info
 app.post("/register", (req, res) => {
-
+   
     let newId = generateRandomString();
     const {
         email,
@@ -201,8 +198,7 @@ app.post("/register", (req, res) => {
             password: hashPass
         };
         users[newId] = newUser;
-
-        
+        req.session.user_id = newId;
         res.redirect("/urls");
     } else if (ifEmail(email)) {
         res.status(400).send("Status Code 400!! The email already exists!!");
@@ -220,7 +216,7 @@ app.post("/logout", (req, res) => {
 //Post Route. Handles the delete button that was added to the main(index) page
 app.post("/urls/:shortURL/delete", (req, res) => {
     const str = req.params.shortURL;
-    const user_id= req.session.user_id;
+    const user_id = req.session.user_id;
     if (user_id && user_id == urlDatabase[str]['userID']) {
         delete urlDatabase[str];
         res.redirect("/urls");
@@ -256,7 +252,7 @@ app.post("/urls", (req, res) => {
     } = req.body;
     const newId = generateRandomString();
     user_id = req.session.user_id;
-   
+
     if (user_id) {
         urlDatabase[newId] = {
             longURL: longURL,
